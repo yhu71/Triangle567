@@ -7,7 +7,13 @@ The primary goal of this file is to demonstrate a simple python program to class
 
 @author: jrr
 @author: rk
+-------------------------------------
+Updated on Wed Sep 16 2020
+
+@author: Ying Hu
 """
+
+import re
 
 def classifyTriangle(a,b,c):
     """
@@ -28,12 +34,38 @@ def classifyTriangle(a,b,c):
     """
 
     # require that the input values be >= 0 and <= 200
+    # Modified note: "The side length should be less than 200" is not in the requirements. - By Ying Hu
+    """
     if a > 200 or b > 200 or c > 200:
         return 'InvalidInput'
-        
+    """
+    # Only positive numbers (include integer and decimal) are allowed
+    # Modified note: Non-zero positive numbers are valid. - By Ying Hu
+    value = re.compile(r'^[+]{0,1}(\d+)$|^[+]{0,1}(\d+\.\d+)$')
+
+    if not(value.match(str(a)) and value.match(str(b)) and value.match(str(c))) or a*b*c == 0:
+        return 'InvalidInput';
+
+    # Modified note: correct triangle classification logic. - By Ying Hu
+    else:
+        a, b, c = sorted([a, b, c])
+        if ((a+b) <= c) or ((c-a) >= b) or ((c-b) >= a):
+            return 'NotTriangle';
+        elif a == b == c:
+            return 'Equilateral';
+        elif a == b or b == c:
+            if round(pow(c, 2), 2) == round(pow(a, 2), 2) + round(pow(b, 2), 2):
+                return 'Isosceles and Right'
+            else:
+                return 'Isosceles'
+        elif round(pow(c, 2), 2) == round(pow(a, 2), 2) + round(pow(b, 2), 2):
+            return 'Right'
+        else:
+            return 'Scalene'
+"""
     if a <= 0 or b <= b or c <= 0:
         return 'InvalidInput'
-    
+  
     # verify that all 3 inputs are integers  
     # Python's "isinstance(object,type) returns True if the object is of the specified type
     if not(isinstance(a,int) and isinstance(b,int) and isinstance(c,int)):
@@ -55,3 +87,4 @@ def classifyTriangle(a,b,c):
         return 'Scalene'
     else:
         return 'Isoceles'
+"""
